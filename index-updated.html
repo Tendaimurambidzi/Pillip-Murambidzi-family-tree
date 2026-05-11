@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phillip Murambidzi (Snr) Family Tree</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background:
+        linear-gradient(rgba(255, 250, 240, 0.90), rgba(255, 250, 240, 0.90)),
+        url('images/parents-watermark.jpg') center center / cover no-repeat fixed,
+        #fff7e8;
+      color: #2b2118;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2), rgba(92,54,20,0.08));
+      z-index: -1;
+    }
+
+    header {
+      background:
+        linear-gradient(135deg, rgba(64, 32, 12, 0.88), rgba(122, 72, 25, 0.82)),
+        url('images/family-cover.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 95px 20px;
+      border-bottom: 8px solid #d6a85f;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0 0 15px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.95;
+    }
+
+    nav {
+      background: rgba(255, 243, 216, 0.85);
+      padding: 18px;
+      text-align: center;
+      border-bottom: 1px solid rgba(214, 168, 95, 0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    nav a {
+      color: #5c3d1f;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #d6a85f;
+    }
+
+    section {
+      padding: 50px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      color: #5c3d1f;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-align: center;
+      border-bottom: 3px solid #d6a85f;
+      padding-bottom: 15px;
+    }
+
+    .intro {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(214, 168, 95, 0.3);
+      box-shadow: 0 6px 20px rgba(85, 45, 15, 0.08);
+      backdrop-filter: blur(3px);
+    }
+
+    .tree-level {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .person-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      border: 1px solid rgba(214, 168, 95, 0.4);
+      box-shadow: 0 6px 20px rgba(85, 45, 15, 0.1);
+      backdrop-filter: blur(3px);
+      transition: all 0.3s ease;
+    }
+
+    .person-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(85, 45, 15, 0.15);
+    }
+
+    .person-card img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 5px solid #e7c47d;
+      margin-bottom: 13px;
+      background: #ead7b6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .person-card h3 {
+      color: #3d2410;
+      margin-bottom: 6px;
+      font-size: 1.08rem;
+    }
+
+    .person-card p {
+      font-size: 0.93rem;
+      color: #5c4b3b;
+      font-family: Arial, sans-serif;
+    }
+
+    .label {
+      display: inline-block;
+      margin-top: 9px;
+      padding: 5px 11px;
+      background: #f3dfb1;
+      color: #5b3212;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+    }
+
+    .spouse-placeholder {
+      opacity: 0.7;
+      border: 2px dashed #d6a85f;
+      background: rgba(255, 243, 216, 0.5);
+    }
+
+    .spouse-placeholder img {
+      filter: grayscale(100%);
+      opacity: 0.6;
+    }
+
+    .to-be-added {
+      color: #d6a85f;
+      font-style: italic;
+    }
+
+    /* Photo Viewer Styles */
+    .photo-viewer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      z-index: 1000;
+      cursor: grab;
+    }
+
+    .photo-viewer.active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo-viewer.dragging {
+      cursor: grabbing;
+    }
+
+    .viewer-image {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+    }
+
+    .viewer-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+
+    .viewer-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .viewer-btn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    .viewer-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .viewer-close:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    .viewer-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #333;
+      font-size: 14px;
+      z-index: 1001;
+    }
+
+    .clickable-photo {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .clickable-photo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(71, 38, 12, 0.25);
+    }
+
+    .generation-title {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 1.38rem;
+      color: #7a4218;
+      font-weight: bold;
+    }
+
+    .children-group {
+      background: rgba(255, 255, 255, 0.76);
+      border-radius: 24px;
+      padding: 23px;
+      margin-top: 28px;
+      border: 1px solid rgba(214, 168, 95, 0.35);
+      box-shadow: 0 6px 20px rgba(85, 45, 15, 0.08);
+      backdrop-filter: blur(3px);
+    }
+
+    .children-group h3 {
+      color: #5c3d1f;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      text-align: center;
+      border-bottom: 2px solid #d6a85f;
+      padding-bottom: 10px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 4px solid #e7c47d;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 243, 216, 0.6);
+      color: #5c3d1f;
+      border-top: 1px solid rgba(214, 168, 95, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      .tree-level {
+        grid-template-columns: 1fr;
+      }
+
+      nav a {
+        display: block;
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Phillip Murambidzi (Snr) Family Tree</h1>
+    <p>A family record celebrating descendants, roots, memories, and continuing legacy of Phillip Murambidzi (Senior) and Sabina Marhanele.</p>
+  </header>
+
+  <nav>
+    <a href="#story">Family Story</a>
+    <a href="#tree">Family Tree</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#updates">Updates</a>
+  </nav>
+
+  <section id="story">
+    <h2>Family Story</h2>
+    <div class="intro">
+      <p>
+        Phillip Murambidzi (Senior) was born on 16 July 1956 to Simon Murambidzi and Maggie Dahwa, both now deceased. Phillip married Sabina Marhanele, born on 15 March 1967. Together, they built a family blessed with children, grandchildren, memories, and a growing legacy.
+      </p>
+      <p style="margin-top: 12px;">
+        This website is a living family record. More names, spouses, children, photographs, stories, and special memories can be added as family continues to grow.
+      </p>
+    </div>
+  </section>
+
+  <section id="tree">
+    <h2>Family Tree</h2>
+
+    <div class="generation-title">First Generation</div>
+    <div class="tree-level">
+      <div class="person-card">
+        <img src="images/simon-murambidzi.jpg" alt="Simon Murambidzi photo" />
+        <h3>Simon Murambidzi</h3>
+        <p>Father of Phillip Murambidzi (Snr)</p>
+        <span class="label">Deceased</span>
+      </div>
+      <div class="person-card">
+        <img src="images/maggie-dahwa.jpg" alt="Maggie Dahwa photo" />
+        <h3>Maggie Dahwa</h3>
+        <p>Mother of Phillip Murambidzi (Snr)</p>
+        <span class="label">Deceased</span>
+      </div>
+    </div>
+
+    <div class="generation-title">Second Generation</div>
+    <div class="tree-level">
+      <div class="person-card">
+        <img src="images/phillip-snr.jpg" alt="Phillip Murambidzi Senior photo" />
+        <h3>Phillip Murambidzi (Snr)</h3>
+        <p>Born: 16 July 1956</p>
+        <span class="label">Family Patriarch</span>
+      </div>
+      <div class="person-card">
+        <img src="images/sabina-marhanele.jpg" alt="Sabina Marhanele photo" />
+        <h3>Sabina Marhanele</h3>
+        <p>Born: 15 March 1967</p>
+        <span class="label">Family Matriarch</span>
+      </div>
+    </div>
+
+    <div class="generation-title">Children of Phillip Murambidzi (Snr) and Sabina Marhanele</div>
+    <div class="tree-level">
+      <!-- Shepherd Murambidzi and Family -->
+      <div class="person-card"><img src="images/shepherd.jpg" alt="Shepherd photo" /><h3>Shepherd Murambidzi</h3><p>Born: 6 May 1983</p><p>Spouse: Cynthia Madzimbira</p></div>
+      <div class="person-card"><img src="images/cynthia-madzimbira.jpg" alt="Cynthia Madzimbira photo" /><h3>Cynthia Madzimbira</h3><p>Spouse of Shepherd Murambidzi</p></div>
+      
+      <!-- Emeldah Murambidzi -->
+      <div class="person-card"><img src="images/emeldah.jpg" alt="Emeldah photo" /><h3>Emeldah Murambidzi</h3><p>Born: 8 January 1985</p><p>Spouse: Collen Karidza</p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Emeldah</span></h3><p>Add photo and name</p></div>
+      
+      <!-- Tendai Murambidzi and Family -->
+      <div class="person-card"><img src="images/tendai.jpg" alt="Tendai photo" /><h3>Tendai Murambidzi</h3><p>Born: 10 June 1987</p><p>Spouse: Amanda Murambidzi</p></div>
+      <div class="person-card"><img src="images/amanda-murambidzi.jpg" alt="Amanda Murambidzi photo" /><h3>Amanda Murambidzi</h3><p>Spouse of Tendai Murambidzi</p></div>
+      
+      <!-- Peter Murambidzi -->
+      <div class="person-card"><img src="images/peter.jpg" alt="Peter photo" /><h3>Peter Murambidzi</h3><p>Born: 19 September 1989</p><p>Spouse: <span class="to-be-added">To be added</span></p><p>Children: <span class="to-be-added">To be added</span></p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Peter</span></h3><p>Add photo and name</p></div>
+      
+      <!-- Phillip Murambidzi (Jnr) -->
+      <div class="person-card"><img src="images/phillip-jnr.jpg" alt="Phillip Junior photo" /><h3>Phillip Murambidzi (Jnr)</h3><p>Born: 18 September 1991</p><p>Spouse: Shalon Mususa</p><p>Children: <span class="to-be-added">To be added</span></p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Phillip Jr</span></h3><p>Add photo and name</p></div>
+      
+      <!-- Winnet Murambidzi -->
+      <div class="person-card"><img src="images/winnet.jpg" alt="Winnet photo" /><h3>Winnet Murambidzi</h3><p>Born: 4 February 1995</p><p>Spouse: <span class="to-be-added">To be added</span></p><p>Children: <span class="to-be-added">To be added</span></p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Winnet</span></h3><p>Add photo and name</p></div>
+      
+      <!-- Simeon Murambidzi -->
+      <div class="person-card"><img src="images/simeon.jpg" alt="Simeon photo" /><h3>Simeon Murambidzi</h3><p>Born: 16 July 1997</p><p>Spouse: <span class="to-be-added">To be added</span></p><p>Children: <span class="to-be-added">To be added</span></p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Simeon</span></h3><p>Add photo and name</p></div>
+      
+      <!-- Tafadzwa Murambidzi -->
+      <div class="person-card"><img src="images/tafadzwa.jpg" alt="Tafadzwa photo" /><h3>Tafadzwa Murambidzi</h3><p>Born: 20 December 1999</p><p>Spouse: <span class="to-be-added">To be added</span></p><p>Children: <span class="to-be-added">To be added</span></p></div>
+      <div class="person-card spouse-placeholder"><img src="images/spouse-placeholder.jpg" alt="Spouse placeholder" /><h3><span class="to-be-added">Spouse of Tafadzwa</span></h3><p>Add photo and name</p></div>
+    </div>
+
+    <div class="generation-title">Grandchildren</div>
+
+    <div class="children-group">
+      <h3>Children of Shepherd Murambidzi</h3>
+      <div class="tree-level">
+        <div class="person-card"><img src="images/phillip-2009.jpg" alt="Phillip born 2009 photo" /><h3>Phillip Murambidzi</h3><p>Born: 2009</p></div>
+        <div class="person-card"><img src="images/leah.jpg" alt="Leah photo" /><h3>Leah Murambidzi</h3><p>Born: 2010</p></div>
+        <div class="person-card"><img src="images/tendai-2017.jpg" alt="Tendai born 2017 photo" /><h3>Tendai Murambidzi</h3><p>Born: 2017</p></div>
+        <div class="person-card"><img src="images/theophilus.jpg" alt="Theophilus photo" /><h3>Theophilus Murambidzi</h3><p>Born: 2021</p></div>
+      </div>
+    </div>
+
+    <div class="children-group">
+      <h3>Children of Emeldah Murambidzi</h3>
+      <div class="tree-level">
+        <div class="person-card"><img src="images/maxwell.jpg" alt="Maxwell photo" /><h3>Maxwell</h3><p>Born: 2008</p></div>
+        <div class="person-card"><img src="images/chipo.jpg" alt="Chipo photo" /><h3>Chipo</h3><p>Born: 2014</p></div>
+        <div class="person-card"><img src="images/chiedza.jpg" alt="Chiedza photo" /><h3>Chiedza</h3><p>Born: 2017</p></div>
+        <div class="person-card"><img src="images/anenyasha.jpg" alt="Anenyasha photo" /><h3>Anenyasha</h3><p>Born: 2023</p></div>
+      </div>
+    </div>
+
+    <div class="children-group">
+      <h3>Children of Tendai Murambidzi</h3>
+      <div class="tree-level">
+        <div class="person-card"><img src="images/mukudzei.jpg" alt="Mukudzei photo" /><h3>Mukudzei Murambidzi</h3><p>Born: 2016</p></div>
+        <div class="person-card"><img src="images/mukundi.jpg" alt="Mukundi photo" /><h3>Mukundi Murambidzi</h3><p>Born: 2023</p></div>
+      </div>
+    </div>
+
+    <p class="placeholder-note">More spouses, children, birth details, and photos can be added as the family grows.</p>
+  </section>
+
+  <section id="gallery">
+    <h2>Family Gallery</h2>
+    <div class="gallery">
+      <img src="images/family-photo-1.jpg" alt="Family photo 1" />
+      <img src="images/family-photo-2.jpg" alt="Family photo 2" />
+      <img src="images/family-photo-3.jpg" alt="Family photo 3" />
+      <img src="images/family-photo-4.jpg" alt="Family photo 4" />
+    </div>
+  </section>
+
+  <section id="updates">
+    <h2>Family Updates</h2>
+    <div class="intro">
+      <p><strong>Coming soon:</strong> Family announcements, birthdays, weddings, reunions, achievements, and memorial notes can be placed here.</p>
+      <p style="margin-top: 12px;">For privacy, avoid publishing phone numbers, home addresses, school names of children, or sensitive personal details on public website.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Phillip Murambidzi (Snr) Family. Built as a living family record.</p>
+  </footer>
+
+  <!-- Photo Viewer Modal -->
+  <div class="photo-viewer" id="photoViewer">
+    <button class="viewer-close" onclick="closePhotoViewer()">×</button>
+    <div class="viewer-controls">
+      <button class="viewer-btn" onclick="zoomIn()">+</button>
+      <button class="viewer-btn" onclick="zoomOut()">−</button>
+      <button class="viewer-btn" onclick="resetZoom()">⟲</button>
+    </div>
+    <img class="viewer-image" id="viewerImage" src="" alt="">
+    <div class="viewer-info" id="viewerInfo">Click and drag to pan • Scroll to zoom • Press ESC to close</div>
+  </div>
+
+  <script>
+    // Photo Viewer JavaScript
+    let currentScale = 1;
+    let isDragging = false;
+    let startX, startY;
+    let translateX = 0, translateY = 0;
+    let currentImageSrc = '';
+    let currentImageAlt = '';
+
+    // Add click handlers to all photos
+    document.addEventListener('DOMContentLoaded', function() {
+      const photos = document.querySelectorAll('.person-card img, .gallery img');
+      photos.forEach(photo => {
+        // Only exclude spouse placeholder image, but include actual spouse photos
+        if (!photo.src.includes('spouse-placeholder.jpg')) {
+          photo.classList.add('clickable-photo');
+          photo.addEventListener('click', function() {
+            openPhotoViewer(this.src, this.alt);
+          });
+        }
+      });
+    });
+
+    function openPhotoViewer(imageSrc, imageAlt) {
+      const viewer = document.getElementById('photoViewer');
+      const viewerImage = document.getElementById('viewerImage');
+      const viewerInfo = document.getElementById('viewerInfo');
+      
+      currentImageSrc = imageSrc;
+      currentImageAlt = imageAlt;
+      viewerImage.src = imageSrc;
+      viewerImage.alt = imageAlt;
+      viewerInfo.textContent = `${imageAlt} • Click and drag to pan • Scroll to zoom • Press ESC to close`;
+      
+      viewer.classList.add('active');
+      resetZoom();
+      
+      // Prevent body scroll when viewer is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoViewer() {
+      const viewer = document.getElementById('photoViewer');
+      viewer.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      resetZoom();
+    }
+
+    function zoomIn() {
+      currentScale = Math.min(currentScale * 1.2, 5);
+      updateTransform();
+    }
+
+    function zoomOut() {
+      currentScale = Math.max(currentScale / 1.2, 0.5);
+      updateTransform();
+    }
+
+    function resetZoom() {
+      currentScale = 1;
+      translateX = 0;
+      translateY = 0;
+      updateTransform();
+    }
+
+    function updateTransform() {
+      const viewerImage = document.getElementById('viewerImage');
+      viewerImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+    }
+
+    // Mouse drag functionality
+    const viewer = document.getElementById('photoViewer');
+    const viewerImage = document.getElementById('viewerImage');
+
+    viewer.addEventListener('mousedown', function(e) {
+      if (e.target === viewerImage) {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        viewer.classList.add('dragging');
+      }
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (isDragging) {
+        e.preventDefault();
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        updateTransform();
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      isDragging = false;
+      viewer.classList.remove('dragging');
+    });
+
+    // Mouse wheel zoom
+    viewer.addEventListener('wheel', function(e) {
+      if (e.target === viewerImage) {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        currentScale = Math.max(0.5, Math.min(5, currentScale * delta));
+        updateTransform();
+      }
+    });
+
+    // Touch support for mobile devices
+    let touchStartDistance = 0;
+    let touchStartScale = 1;
+
+    viewer.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        touchStartDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        touchStartScale = currentScale;
+      } else if (e.touches.length === 1 && e.target === viewerImage) {
+        isDragging = true;
+        startX = e.touches[0].clientX - translateX;
+        startY = e.touches[0].clientY - translateY;
+      }
+    });
+
+    viewer.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const currentDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        currentScale = Math.max(0.5, Math.min(5, touchStartScale * (currentDistance / touchStartDistance)));
+        updateTransform();
+      } else if (e.touches.length === 1 && isDragging) {
+        e.preventDefault();
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+        updateTransform();
+      }
+    });
+
+    viewer.addEventListener('touchend', function() {
+      isDragging = false;
+    });
+
+    // Keyboard controls
+    document.addEventListener('keydown', function(e) {
+      if (viewer.classList.contains('active')) {
+        switch(e.key) {
+          case 'Escape':
+            closePhotoViewer();
+            break;
+          case '+':
+          case '=':
+            zoomIn();
+            break;
+          case '-':
+          case '_':
+            zoomOut();
+            break;
+          case '0':
+            resetZoom();
+            break;
+        }
+      }
+    });
+
+    // Close viewer when clicking outside image
+    viewer.addEventListener('click', function(e) {
+      if (e.target === viewer) {
+        closePhotoViewer();
+      }
+    });
+  </script>
+</body>
+</html>
